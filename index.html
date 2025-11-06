@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>کافه فیلم</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@500&display=swap');
+
+  body {
+    margin: 0;
+    font-family: 'Vazirmatn', sans-serif;
+    background-color: #2f2f2f;
+    color: white;
+    overflow-x: hidden;
+  }
+
+  header {
+    background-color: #a9def9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    border-radius: 0 0 30px 30px;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: black;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: border-bottom 0.2s;
+  }
+
+  nav a.active {
+    border-bottom: 2px solid black;
+  }
+
+  .section {
+    display: none;
+    padding: 30px;
+    text-align: center;
+  }
+
+  .active-section {
+    display: block;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    justify-items: center;
+  }
+
+  .movie-box {
+    background-color: #42a5f5;
+    color: white;
+    font-size: 18px;
+    border-radius: 25px;
+    padding: 60px 0;
+    width: 90%;
+    max-width: 300px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .movie-box:hover {
+    background-color: #2196f3;
+    transform: scale(1.05);
+  }
+
+  video {
+    width: 90%;
+    border-radius: 20px;
+    margin-top: 20px;
+  }
+
+  footer {
+    text-align: center;
+    margin: 30px 0;
+  }
+
+  footer button {
+    background-color: #a9def9;
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  /* صفحه‌ی انتقال */
+  #transition {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 15, 0.97);
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    font-family: 'Vazirmatn', sans-serif;
+  }
+
+  /* مکعب سه‌بعدی */
+  .cube {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    transform-style: preserve-3d;
+    animation: spin 3s infinite linear;
+  }
+
+  .cube-face {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #00ffaa, #00aaff);
+    border: 2px solid #fff;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: colorchange 3s infinite alternate;
+  }
+
+  .cube-face.front  { transform: translateZ(60px); }
+  .cube-face.back   { transform: rotateY(180deg) translateZ(60px); }
+  .cube-face.right  { transform: rotateY(90deg) translateZ(60px); }
+  .cube-face.left   { transform: rotateY(-90deg) translateZ(60px); }
+  .cube-face.top    { transform: rotateX(90deg) translateZ(60px); }
+  .cube-face.bottom { transform: rotateX(-90deg) translateZ(60px); }
+
+  @keyframes spin {
+    0%   { transform: rotateX(0) rotateY(0); }
+    50%  { transform: rotateX(180deg) rotateY(180deg); }
+    100% { transform: rotateX(360deg) rotateY(360deg); }
+  }
+
+  @keyframes colorchange {
+    0% { background: linear-gradient(135deg, #00ffaa, #00aaff); }
+    50% { background: linear-gradient(135deg, #ff00aa, #ffaa00); }
+    100% { background: linear-gradient(135deg, #00ffaa, #00aaff); }
+  }
+
+  /* فنجون سه‌بعدی */
+  .cup {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 0 0 25px 25px;
+    overflow: hidden;
+    transform: rotateX(15deg);
+  }
+
+  .cup::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 10px;
+    width: 30px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  .cup::after {
+    content: '';
+    position: absolute;
+    right: -15px;
+    top: 15px;
+    width: 20px;
+    height: 25px;
+    border: 4px solid #fff;
+    border-left: none;
+    border-radius: 50%;
+  }
+
+  .steam {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+  }
+
+  .steam span {
+    display: block;
+    width: 6px;
+    height: 25px;
+    background: white;
+    opacity: 0.6;
+    border-radius: 50%;
+    animation: steam 1.5s infinite ease-in-out;
+  }
+
+  .steam span:nth-child(1) { animation-delay: 0s; }
+  .steam span:nth-child(2) { animation-delay: 0.3s; }
+  .steam span:nth-child(3) { animation-delay: 0.6s; }
+
+  @keyframes steam {
+    0% { transform: translateY(0) scale(0.8); opacity: 0.7; }
+    50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+    100% { transform: translateY(-40px) scale(0.7); opacity: 0; }
+  }
+
+  #transition p {
+    margin-top: 25px;
+    font-size: 18px;
+    color: #eee;
+    animation: fadeText 1.5s infinite;
+  }
+
+  @keyframes fadeText {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>☕ کافه فیلم</h1>
+  <nav>
+    <a class="nav-btn active" data-target="home">خانه</a>
+    <a class="nav-btn" data-target="animation">انیمیشن</a>
+    <a class="nav-btn" data-target="film">فیلم</a>
+    <a class="nav-btn" data-target="dabino">دوبله دابینو</a>
+  </nav>
+</header>
+
+<!-- خانه -->
+<div id="home" class="section active-section">
+  <h2>🎬 به کافه فیلم خوش اومدی!</h2>
+  <p>اینجا می‌تونی جدیدترین انیمیشن‌ها، فیلم‌ها و دوبله‌های دابینو رو ببینی ☕✨</p>
+</div>
+
+<!-- انیمیشن -->
+<div id="animation" class="section">
+  <h2>🎞️ انیمیشن‌ها</h2>
+  <video controls poster="https://cdn.imgurl.ir/uploads/d826462____.jpg">
+    <source src="https://cdn.imgurl.ir/uploads/d826462____.mp4" type="video/mp4">
+    مرورگر شما از ویدیو پشتیبانی نمی‌کند 😢
+  </video>
+</div>
+
+<!-- فیلم -->
+<div id="film" class="section">
+  <h2>🎥 فیلم‌ها</h2>
+  <div class="grid">
+    <div class="movie-box">فیلم اول</div>
+    <div class="movie-box">فیلم دوم</div>
+  </div>
+</div>
+
+<!-- دوبله دابینو -->
+<div id="dabino" class="section">
+  <h2>🎤 دوبله دابینو</h2>
+  <video controls poster="https://cdn.imgurl.ir/uploads/d826462____.jpg">
+    <source src="https://cdn.imgurl.ir/uploads/d826462____.mp4" type="video/mp4">
+  </video>
+</div>
+
+<footer>
+  <button>علیرضا حاتمی</button>
+</footer>
+
+<!-- انیمیشن انتقال -->
+<div id="transition">
+  <div class="cube">
+    <div class="cube-face front"><div class="cup"><div class="steam"><span></span><span></span><span></span></div></div></div>
+    <div class="cube-face back"><div class="cup"><div class="steam"><span></span><span></span><span></span></div></div></div>
+    <div class="cube-face right"><div class="cup"><div class="steam"><span></span><span></span><span></span></div></div></div>
+    <div class="cube-face left"><div class="cup"><div class="steam"><span></span><span></span><span></span></div></div></div>
+    <div class="cube-face top"><div class="cup"><div class="steam"><span></span><span></span><span></span></div></div></div>
+    <div class="cube-face bottom"><div class="cup"><div class="steam"><span></span><span></span><span></span></div></div></div>
+  </div>
+  <p>در حال انتقال به صفحه...</p>
+</div>
+
+<script>
+const buttons = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.section');
+const transition = document.getElementById('transition');
+
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!btn.classList.contains('active')) {
+      transition.style.display = 'flex';
+      setTimeout(() => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const target = btn.dataset.target;
+        sections.forEach(sec => {
+          sec.classList.remove('active-section');
+          if (sec.id === target) sec.classList.add('active-section');
+        });
+        transition.style.display = 'none';
+      }, 2200);
+    }
+  });
+});
+</script>
+
+</body>
+</html>
